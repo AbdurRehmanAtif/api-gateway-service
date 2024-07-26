@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  auth-service:
+    build:
+      context: .
+      target: development
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 5002:5002
+    command: npm run dev

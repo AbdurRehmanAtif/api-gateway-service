@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+  auth-service:
+    build:
+      context: .
+      target: production
+    ports:
+      - 5001:5001
