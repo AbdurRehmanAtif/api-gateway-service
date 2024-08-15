@@ -29,7 +29,7 @@ function expressInit() {
 function expressStart(app: any, PORT: number) {
     // start the app on specific PORT
     app.listen(PORT, () => {
-        console.log(`App is listening to  ${process.env.PORT}`);
+        console.log(`Proxy Server is running on ${process.env.PORT}`);
     })
 
 }

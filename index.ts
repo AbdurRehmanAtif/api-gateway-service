@@ -10,12 +10,15 @@ import express, { ErrorRequestHandler, Request, Response, NextFunction } from 'e
 import { DatabaseProviderFactory, DatabaseType } from './src/factory/databaseProviderFactory';
 import CPassport from './src/lib/security/Passport';
 import ApiGateway from './src/proxy';
+import graphQlInit from './src/config/graphQl';
 
 dotenv.config()
 
 // Start the Http Server
 const app = http.expressInit()
 const router = http.startRouting()
+
+graphQlInit()
 
 ApiGateway.init(app)
 
