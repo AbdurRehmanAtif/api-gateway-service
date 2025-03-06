@@ -1,8 +1,9 @@
-import express = require("express")
-import cors = require("cors")
+import express, { Express, Request, Response, NextFunction } from 'express';
+import cors from 'cors';
 
-function expressInit() {
-    // create express connection
+function expressInit(): Express {
+ 
+
     const app = express();
     // let the api use json requests
     app.use(express.json());
@@ -21,32 +22,28 @@ function expressInit() {
         res.setHeader('Access-Control-Allow-Headers', 'Authorization, SecretSessionId');
         next();
     });
-
     return app;
 }
 
-
-function expressStart(app: any, PORT: number) {
-    // start the app on specific PORT
+function expressStart(app: Express, PORT: number) {
     app.listen(PORT, () => {
-        console.log(`Proxy Server is running on ${process.env.PORT}`);
-    })
-
+        console.log(`Proxy Server is running on port ${PORT}`);
+    });
 }
 
 function startRouting() {
+    
     const router = express.Router();
-    router.get('/', (req, res, next) => {
-   
-        res.send('proxy Server working fine ` 5010');
+
+    router.get('/', (req: Request, res: Response, next: NextFunction) => {
+        res.send('Proxy Server working fine on port 5010');
     });
+
     return router;
 }
 
 export default {
     expressInit,
     expressStart,
-    startRouting
+    startRouting,
 };
-
-

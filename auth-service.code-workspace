@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": "../auth-service"
+		},
+		{
+			"path": "../product-service"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../mail-service"
+		},
+		{
+			"path": "../cache-service"
+		},
+		{
+			"path": "../rabbitMQ-service"
+		},
+		{
+			"path": "../checkout-service"
+		}
+	]
+}

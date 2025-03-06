@@ -1,45 +1,18 @@
 // Import modules using ES module syntax
 import http from './src/config/http';
-import AuthRoute from './src/routes/authRoutes';
-import SessionHandshake from './src/routes/SessionHandshake';
-import session from './src/config/sessions';
-import ProfileRoute from './src/routes/profileRoutes';
 import dotenv from "dotenv"
-import "./src/config/passportLocal";
 import express, { ErrorRequestHandler, Request, Response, NextFunction } from 'express';
-import { DatabaseProviderFactory, DatabaseType } from './src/factory/databaseProviderFactory';
-import CPassport from './src/lib/security/Passport';
+
 import ApiGateway from './src/proxy';
-import graphQlInit from './src/config/graphQl';
+
 
 dotenv.config()
 
 // Start the Http Server
 const app = http.expressInit()
+
+
 const router = http.startRouting()
-
-graphQlInit()
-
-ApiGateway.init(app)
-
-const dbFactory = new DatabaseProviderFactory()
-const databaseType = [DatabaseType.MongoDB]
-dbFactory.createDatabaseProviders(databaseType)
-
-
-// //setting session 
-session.setupSessionStore(app)
-// //Use  Passport Auth
-// //use JWT Passport
-const cPassport = new CPassport(app)
-cPassport.initPassportJWT()
-cPassport.initPassportLocal()
-//Session Routes
-app.use('', SessionHandshake(router))
-// // //Basic JWT routes
-app.use('', AuthRoute(router))
-// // //User Profile Routes
-app.use('', ProfileRoute(router))
 
 const errorHandler: ErrorRequestHandler = (error: any, req: Request, res: Response, next: NextFunction) => {
     res.status(error.statusCode || 500).json({
@@ -53,10 +26,22 @@ const errorHandler: ErrorRequestHandler = (error: any, req: Request, res: Respon
 }
 
 app.use(errorHandler)
-
+// restream parsed body before proxying
+var restream = function (proxyReq: any, req: Request, res: Response, options: any) {
+    if (req.body) {
+        let bodyData = JSON.stringify(req.body);
+        // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        // stream the content
+        proxyReq.write(bodyData);
+    }
+}
+app.use(restream)
+ApiGateway.init(app)
 
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 http.expressStart(app, port)
-// mongodb.setupSessionStore(app);
+app.use(router)
 
 

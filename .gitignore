@@ -1,1 +1,5 @@
 node_modules
+public-key.pem
+private-key.pem
+node_modules/
+dist/
